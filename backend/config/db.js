@@ -43,16 +43,30 @@ const formatQuery = (sql) => {
   return formatted;
 };
 
+// Postgres returns all column names as lowercase.
+// Normalize rows so .ID, .Name etc. still work the same as in MySQL.
+const normalizeRow = (row) => {
+  if (!row || typeof row !== 'object') return row;
+  const normalized = { ...row };
+  // Alias lowercase to uppercase for common PK columns
+  if ('id' in row && !('ID' in row)) normalized.ID = row.id;
+  if ('name' in row && !('Name' in row)) normalized.Name = row.name;
+  return normalized;
+};
+
+const normalizeRows = (rows) => Array.isArray(rows) ? rows.map(normalizeRow) : rows;
+
 const executeQuery = async (sql, params = []) => {
   const pgSql = formatQuery(sql);
   const result = await pgPool.query(pgSql, params);
   
-  const rows = result.rows;
+  const rows = normalizeRows(result.rows);
   
   // Mimic mysql2 return format
   if (result.command === 'INSERT' || result.command === 'UPDATE' || result.command === 'DELETE') {
+      const insertedRow = result.rows.length > 0 ? result.rows[0] : {};
       const mysqlResult = {
-          insertId: rows.length > 0 ? (rows[0].id || rows[0].ID) : null,
+          insertId: insertedRow.id || insertedRow.ID || null,
           affectedRows: result.rowCount,
           changedRows: result.rowCount
       };
