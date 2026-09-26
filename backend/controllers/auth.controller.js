@@ -55,8 +55,10 @@ exports.login = async (req, res, next) => {
     }
 
     // Generate JWT
+    // NOTE: PostgreSQL returns column names as lowercase, so use user.id (not user.ID)
+    const userId = user.id || user.ID;
     const token = jwt.sign(
-      { id: user.ID, email: user.email, role: user.role },
+      { id: userId, email: user.email, role: user.role },
       process.env.JWT_SECRET || 'secret',
       { expiresIn: process.env.JWT_EXPIRE || '7d' }
     );
@@ -71,7 +73,7 @@ exports.login = async (req, res, next) => {
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     });
 
-    res.json({ message: 'Login successful', token, user: { id: user.ID, email: user.email, role: user.role } });
+    res.json({ message: 'Login successful', token, user: { id: userId, email: user.email, role: user.role } });
   } catch (err) {
     next(err);
   }
@@ -89,7 +91,7 @@ exports.logout = (req, res) => {
 
 exports.me = async (req, res, next) => {
   try {
-    const [users] = await pool.query('SELECT ID, username, email, role FROM users WHERE ID = ?', [req.user.id]);
+    const [users] = await pool.query('SELECT id, username, email, role FROM users WHERE id = $1', [req.user.id]);
     if (users.length === 0) throw new ApiError(404, 'User not found');
     res.json(users[0]);
   } catch (err) {
