@@ -24,6 +24,9 @@ const formatQuery = (sql) => {
   let paramCount = 1;
   formatted = formatted.replace(/\?/g, () => `$${paramCount++}`);
 
+  // Convert MySQL CURDATE() to Postgres CURRENT_DATE
+  formatted = formatted.replace(/CURDATE\(\)/gi, 'CURRENT_DATE');
+
   // Handle ON DUPLICATE KEY UPDATE (specifically for attendance Upsert)
   if (formatted.includes('ON DUPLICATE KEY UPDATE')) {
       formatted = formatted.replace(

@@ -54,34 +54,34 @@ INSERT INTO teachers (user_id, full_name, email, phone, department, subjects_tau
 -- Attendance records (last 7 days for each enrolled student)
 INSERT INTO attendance (student_id, course_id, "date", status, marked_by) VALUES
 -- Alice (student 1) in Math (course 1) and Chemistry (course 3)
-(1, 1, DATE_SUB(CURDATE(), INTERVAL 6 DAY), 'present', 1),
-(1, 1, DATE_SUB(CURDATE(), INTERVAL 5 DAY), 'present', 1),
-(1, 1, DATE_SUB(CURDATE(), INTERVAL 4 DAY), 'late',    1),
-(1, 1, DATE_SUB(CURDATE(), INTERVAL 3 DAY), 'present', 1),
-(1, 1, DATE_SUB(CURDATE(), INTERVAL 2 DAY), 'present', 1),
-(1, 3, DATE_SUB(CURDATE(), INTERVAL 6 DAY), 'present', 1),
-(1, 3, DATE_SUB(CURDATE(), INTERVAL 5 DAY), 'absent',  1),
-(1, 3, DATE_SUB(CURDATE(), INTERVAL 4 DAY), 'present', 1),
+(1, 1, CURRENT_DATE - INTERVAL '6 days', 'present', 1),
+(1, 1, CURRENT_DATE - INTERVAL '5 days', 'present', 1),
+(1, 1, CURRENT_DATE - INTERVAL '4 days', 'late',    1),
+(1, 1, CURRENT_DATE - INTERVAL '3 days', 'present', 1),
+(1, 1, CURRENT_DATE - INTERVAL '2 days', 'present', 1),
+(1, 3, CURRENT_DATE - INTERVAL '6 days', 'present', 1),
+(1, 3, CURRENT_DATE - INTERVAL '5 days', 'absent',  1),
+(1, 3, CURRENT_DATE - INTERVAL '4 days', 'present', 1),
 -- Bob (student 2) in Physics (course 2) and English (course 4)
-(2, 2, DATE_SUB(CURDATE(), INTERVAL 6 DAY), 'present', 1),
-(2, 2, DATE_SUB(CURDATE(), INTERVAL 5 DAY), 'absent',  1),
-(2, 2, DATE_SUB(CURDATE(), INTERVAL 4 DAY), 'present', 1),
-(2, 2, DATE_SUB(CURDATE(), INTERVAL 3 DAY), 'present', 1),
-(2, 4, DATE_SUB(CURDATE(), INTERVAL 6 DAY), 'present', 1),
-(2, 4, DATE_SUB(CURDATE(), INTERVAL 5 DAY), 'present', 1),
+(2, 2, CURRENT_DATE - INTERVAL '6 days', 'present', 1),
+(2, 2, CURRENT_DATE - INTERVAL '5 days', 'absent',  1),
+(2, 2, CURRENT_DATE - INTERVAL '4 days', 'present', 1),
+(2, 2, CURRENT_DATE - INTERVAL '3 days', 'present', 1),
+(2, 4, CURRENT_DATE - INTERVAL '6 days', 'present', 1),
+(2, 4, CURRENT_DATE - INTERVAL '5 days', 'present', 1),
 -- Carol (student 3) in Math and Physics
-(3, 1, DATE_SUB(CURDATE(), INTERVAL 6 DAY), 'present', 1),
-(3, 1, DATE_SUB(CURDATE(), INTERVAL 5 DAY), 'present', 1),
-(3, 1, DATE_SUB(CURDATE(), INTERVAL 4 DAY), 'present', 1),
-(3, 2, DATE_SUB(CURDATE(), INTERVAL 6 DAY), 'late',    1),
-(3, 2, DATE_SUB(CURDATE(), INTERVAL 5 DAY), 'present', 1),
+(3, 1, CURRENT_DATE - INTERVAL '6 days', 'present', 1),
+(3, 1, CURRENT_DATE - INTERVAL '5 days', 'present', 1),
+(3, 1, CURRENT_DATE - INTERVAL '4 days', 'present', 1),
+(3, 2, CURRENT_DATE - INTERVAL '6 days', 'late',    1),
+(3, 2, CURRENT_DATE - INTERVAL '5 days', 'present', 1),
 -- Emma (student 5) in Math, Physics, English
-(5, 1, DATE_SUB(CURDATE(), INTERVAL 6 DAY), 'present', 1),
-(5, 1, DATE_SUB(CURDATE(), INTERVAL 5 DAY), 'present', 1),
-(5, 2, DATE_SUB(CURDATE(), INTERVAL 6 DAY), 'present', 1),
-(5, 2, DATE_SUB(CURDATE(), INTERVAL 5 DAY), 'present', 1),
-(5, 4, DATE_SUB(CURDATE(), INTERVAL 6 DAY), 'absent',  1),
-(5, 4, DATE_SUB(CURDATE(), INTERVAL 5 DAY), 'present', 1);
+(5, 1, CURRENT_DATE - INTERVAL '6 days', 'present', 1),
+(5, 1, CURRENT_DATE - INTERVAL '5 days', 'present', 1),
+(5, 2, CURRENT_DATE - INTERVAL '6 days', 'present', 1),
+(5, 2, CURRENT_DATE - INTERVAL '5 days', 'present', 1),
+(5, 4, CURRENT_DATE - INTERVAL '6 days', 'absent',  1),
+(5, 4, CURRENT_DATE - INTERVAL '5 days', 'present', 1);
 
 -- Announcements
 INSERT INTO announcements (title, content, author_id, category, pinned, target_role) VALUES
