@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import API from './api';
 import AuthContext from './context/AuthContext';
 
 const CAT_COLORS = {
@@ -21,7 +21,7 @@ function Announcements() {
 
   const fetchAnnouncements = () => {
     setLoading(true);
-    axios.get('http://localhost:8081/announcements')
+    API.get('/announcements')
       .then(res => setAnnouncements(res.data))
       .catch(console.error)
       .finally(() => setLoading(false));
@@ -31,7 +31,7 @@ function Announcements() {
     e.preventDefault();
     setSaving(true);
     try {
-      await axios.post('http://localhost:8081/announcements', form);
+      await API.post('/announcements', form);
       setShowForm(false);
       fetchAnnouncements();
     } catch (err) {
@@ -44,7 +44,7 @@ function Announcements() {
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this announcement?')) return;
     try {
-      await axios.delete(`http://localhost:8081/announcements/${id}`);
+      await API.delete(`/announcements/${id}`);
       fetchAnnouncements();
     } catch (err) {
       alert('Failed to delete');

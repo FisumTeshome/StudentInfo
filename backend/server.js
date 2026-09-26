@@ -7,13 +7,20 @@ const app = express();
 
 // Middleware
 app.use(express.json());
+
+const ALLOWED_ORIGINS = [
+  process.env.CORS_ORIGIN,          // production Vercel URL (set in Render env vars)
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'http://localhost:3002',
+].filter(Boolean);
+
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || /^http:\/\/localhost:(3000|3001|3002)$/.test(origin) || origin === process.env.CORS_ORIGIN) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
+    // Allow requests with no origin (e.g. mobile apps, curl, Postman)
+    if (!origin) return callback(null, true);
+    if (ALLOWED_ORIGINS.includes(origin)) return callback(null, true);
+    callback(new Error(`CORS: origin ${origin} not allowed`));
   },
   credentials: true
 }));

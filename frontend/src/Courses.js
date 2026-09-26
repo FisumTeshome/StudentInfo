@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import API from './api';
 
 function Courses() {
   const [courses, setCourses] = useState([]);
@@ -9,7 +9,7 @@ function Courses() {
 
   const fetchCourses = () => {
     setLoading(true);
-    axios.get('http://localhost:8081/courses')
+    API.get('/courses')
       .then(res => { setCourses(res.data); setLoading(false); })
       .catch(() => setLoading(false));
   };
