@@ -1,12 +1,19 @@
 const { Pool } = require('pg');
 
-const pgPool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'trainingschedule',
-  port: process.env.DB_PORT || 5432,
-});
+const pgPool = new Pool(
+  process.env.DATABASE_URL
+    ? {
+        connectionString: process.env.DATABASE_URL,
+        ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+      }
+    : {
+        host: process.env.DB_HOST || 'localhost',
+        user: process.env.DB_USER || 'root',
+        password: process.env.DB_PASSWORD || '',
+        database: process.env.DB_NAME || 'trainingschedule',
+        port: process.env.DB_PORT || 5432,
+      }
+);
 
 // Custom wrapper to intercept MySQL queries and convert them to Postgres syntax
 // This avoids having to change all 9 controller files
