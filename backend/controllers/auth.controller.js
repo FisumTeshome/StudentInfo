@@ -62,10 +62,12 @@ exports.login = async (req, res, next) => {
     );
 
     // Set HttpOnly cookie
+    // In production (cross-domain Vercel → Render): SameSite=none + Secure=true required
+    const isProduction = process.env.NODE_ENV === 'production';
     res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'strict',
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     });
 
@@ -76,7 +78,12 @@ exports.login = async (req, res, next) => {
 };
 
 exports.logout = (req, res) => {
-  res.clearCookie('token');
+  const isProduction = process.env.NODE_ENV === 'production';
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'strict',
+  });
   res.json({ message: 'Logged out successfully' });
 };
 
