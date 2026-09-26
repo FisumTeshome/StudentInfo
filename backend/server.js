@@ -1,60 +1,38 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const mysql=require('mysql');
+const cookieParser = require('cookie-parser');
 
+const app = express();
 
-const app=express();
-
+// Middleware
 app.use(express.json());
-app.use(cors());
-const datas= mysql.createConnection({
-    host:"localhost",
-    user:"root",
-    password:"",
-    database:"trainingschedule"
-});
-app.get("/students",(req,res) =>{
-    const sql="SELECT * FROM students";
-    datas.query(sql,(err,data)=>{
-        if(err) return res.json("Error");
-        return res.json(data);
-    })
-})
-app.post('/create',(req,res)=>{
-    const sql="INSERT INTO students (`Name`,`email`,`class`) VALUES (?)";
-    const values=[
-        req.body.name,
-        req.body.email,
-        req.body.clas
-    ]
-    datas.query(sql,[values],(err,data)=>{
-        if(err) return res.json("Error");
-        return res.json(data);
-    
-    })
-})
-app.delete('/students/:id', (req, res) => {
-    const sql = "DELETE FROM students WHERE ID=?";
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || /^http:\/\/localhost:(3000|3001|3002)$/.test(origin) || origin === process.env.CORS_ORIGIN) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
+app.use(cookieParser());
 
-    const id = req.params.id;
-    datas.query(sql, [id], (err, data) => {
-        if (err) return res.json("Error");
-        return res.json(data);
-    });
+// Routes
+const studentsRouter = require('./routes/students.routes');
+const authRouter = require('./routes/auth.routes');
+const extendedRouter = require('./routes/extended.routes');
+const { errorHandler } = require('./middleware/errorHandler');
+
+app.use('/', authRouter);
+app.use('/', studentsRouter);
+app.use('/', extendedRouter);
+
+// Error handler
+app.use(errorHandler);
+
+const PORT = process.env.PORT || 8081;
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
 });
-app.put('/update/:id', (req, res) => {
-    const sql = "UPDATE students SET `Name`=?, `email`=?, `class`=? WHERE ID=?";
-    const values = [
-        req.body.name,
-        req.body.email,
-        req.body.clas
-    ];
-    const id = req.params.id;
-    datas.query(sql, [...values, id], (err, data) => {
-        if (err) return res.json("Error");
-        return res.json(data);
-    });
-});
-app.listen(8081,()=>{
-    console.log("hey there.....")
-})
