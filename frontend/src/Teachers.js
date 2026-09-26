@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import API from './api';
 import AuthContext from './context/AuthContext';
 
 const DEPT_COLORS = {
@@ -25,7 +25,7 @@ function Teachers() {
 
   const fetchTeachers = () => {
     setLoading(true);
-    axios.get('http://localhost:8081/teachers')
+    API.get('/teachers')
       .then(res => { setTeachers(res.data); setLoading(false); })
       .catch(() => setLoading(false));
   };
@@ -49,9 +49,9 @@ function Teachers() {
     setError(''); setSaving(true);
     try {
       if (editId) {
-        await axios.put(`http://localhost:8081/teachers/${editId}`, form);
+        await API.put(`/teachers/${editId}`, form);
       } else {
-        await axios.post('http://localhost:8081/teachers', form);
+        await API.post('/teachers', form);
       }
       setShowForm(false); fetchTeachers();
     } catch (err) {
@@ -62,7 +62,7 @@ function Teachers() {
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this teacher record?')) return;
     try {
-      await axios.delete(`http://localhost:8081/teachers/${id}`);
+      await API.delete(`/teachers/${id}`);
       fetchTeachers(); if (selected?.ID === id) setSelected(null);
     } catch { alert('Failed to delete'); }
   };

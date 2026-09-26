@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import API from './api';
 import { useParams } from 'react-router-dom';
 
 function StudentProfile() {
@@ -8,13 +8,13 @@ function StudentProfile() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get(`http://localhost:8081/students/${studentId}/profile`)
+    API.get(`/students/${studentId}/profile`)
       .then(res => { setStudent(res.data); setLoading(false); })
       .catch(() => setLoading(false));
   }, [studentId]);
 
   const handleExportGrades = () => {
-    axios.get(`http://localhost:8081/export/students/${studentId}/grades`, { responseType: 'blob' })
+    API.get(`/export/students/${studentId}/grades`, { responseType: 'blob' })
       .then(res => {
         const url = window.URL.createObjectURL(res.data);
         const a = document.createElement('a');

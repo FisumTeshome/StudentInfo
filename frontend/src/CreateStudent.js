@@ -1,4 +1,4 @@
-import axios from 'axios';
+import API from './api';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -28,7 +28,7 @@ function CreateStudent() {
     if (!emailRegex.test(email)) { setError('Enter a valid email address'); return; }
     setLoading(true);
     try {
-      await axios.post('http://localhost:8081/create', { name, email, clas });
+      await API.post('/create', { name, email, clas });
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.error?.message || 'Failed to create student');

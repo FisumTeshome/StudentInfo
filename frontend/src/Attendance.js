@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import API from './api';
 import AuthContext from './context/AuthContext';
 
 function Attendance() {
@@ -12,7 +12,7 @@ function Attendance() {
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    axios.get('http://localhost:8081/courses')
+    API.get('/courses')
       .then(res => setCourses(res.data))
       .catch(console.error);
   }, []);
@@ -20,7 +20,7 @@ function Attendance() {
   useEffect(() => {
     if (selectedCourse && selectedDate) {
       setLoading(true);
-      axios.get(`http://localhost:8081/attendance/course/${selectedCourse}/date/${selectedDate}`)
+      API.get(`/attendance/course/${selectedCourse}/date/${selectedDate}`)
         .then(res => setAttendanceRecords(res.data))
         .catch(console.error)
         .finally(() => setLoading(false));
@@ -40,7 +40,7 @@ function Attendance() {
         student_id: r.student_id,
         status: r.status
       }));
-      await axios.post('http://localhost:8081/attendance/bulk', {
+      await API.post('/attendance/bulk', {
         course_id: selectedCourse,
         date: selectedDate,
         records: recordsToSave

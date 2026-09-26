@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import API from './api';
 import { Link } from 'react-router-dom';
 import AuthContext from './context/AuthContext';
 
@@ -30,7 +30,7 @@ function Students() {
   }, [search, classFilter, sortBy, sortOrder, students]);
 
   const fetchStudents = () => {
-    axios.get('http://localhost:8081/students')
+    API.get('/students')
       .then(res => {
         setStudents(res.data);
         setClasses([...new Set(res.data.map(s => s.class))]);
@@ -41,7 +41,7 @@ function Students() {
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this student? This cannot be undone.')) return;
     try {
-      await axios.delete('http://localhost:8081/students/' + id);
+      await API.delete('/students/' + id);
       fetchStudents();
     } catch (err) {
       alert('Failed to delete student');
@@ -49,7 +49,7 @@ function Students() {
   };
 
   const handleExport = () => {
-    axios.get('http://localhost:8081/export/students', { responseType: 'blob' })
+    API.get('/export/students', { responseType: 'blob' })
       .then(res => {
         const url = window.URL.createObjectURL(res.data);
         const a = document.createElement('a');

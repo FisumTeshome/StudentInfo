@@ -1,8 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import axios from 'axios';
-
-// Always send cookies with every request
-axios.defaults.withCredentials = true;
+import API from '../api';
 
 const AuthContext = createContext();
 
@@ -12,21 +9,21 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     // Check if user is logged in on mount
-    axios.get('http://localhost:8081/auth/me')
+    API.get('/auth/me')
       .then(res => setUser(res.data))
       .catch(() => setUser(null))
       .finally(() => setLoading(false));
   }, []);
 
   const login = async (email, password) => {
-    const res = await axios.post('http://localhost:8081/auth/login', { email, password });
+    const res = await API.post('/auth/login', { email, password });
     setUser(res.data.user);
     return res.data;
   };
 
   const logout = async () => {
     try {
-      await axios.post('http://localhost:8081/auth/logout');
+      await API.post('/auth/logout');
     } catch (_) {
       // Silently ignore — always clear local user state
     } finally {
@@ -35,7 +32,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signup = async (username, email, password) => {
-    const res = await axios.post('http://localhost:8081/auth/signup', { username, email, password });
+    const res = await API.post('/auth/signup', { username, email, password });
     return res.data;
   };
 

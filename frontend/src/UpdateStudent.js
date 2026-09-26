@@ -1,4 +1,4 @@
-import axios from 'axios';
+import API from './api';
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -23,7 +23,7 @@ function UpdateStudent() {
 
   useEffect(() => {
     let mounted = true;
-    axios.get('http://localhost:8081/students/' + id)
+    API.get('/students/' + id)
       .then(res => {
         if (!mounted) return;
         setName(res.data.Name || '');
@@ -42,7 +42,7 @@ function UpdateStudent() {
     if (!emailRegex.test(email)) { setError('Enter a valid email address'); return; }
     setLoading(true);
     try {
-      await axios.put('http://localhost:8081/update/' + id, { name, email, clas });
+      await API.put('/update/' + id, { name, email, clas });
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.error?.message || 'Failed to update student');

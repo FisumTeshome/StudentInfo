@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import API from './api';
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 // Muted, harmonious chart palette
@@ -26,7 +26,7 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('http://localhost:8081/analytics/dashboard')
+    API.get('/analytics/dashboard')
       .then(res => { setData(res.data); setLoading(false); })
       .catch(() => setLoading(false));
   }, []);
